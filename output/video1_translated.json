@@ -1,0 +1,808 @@
+{
+    "segments": [
+        {
+            "ID": 0,
+            "text": "Vsauce, Michael ở đây.",
+            "start": 0.0,
+            "end": 2.96
+        },
+        {
+            "ID": 1,
+            "text": "Con chó chơi Toto trong The Wizard of Oz được công nhận là Toto.",
+            "start": 2.96,
+            "end": 9.64
+        },
+        {
+            "ID": 2,
+            "text": "Nhưng trong thực tế, tên của con chó là Terry.",
+            "start": 9.64,
+            "end": 13.200000000000001
+        },
+        {
+            "ID": 3,
+            "text": "Và khi Terry qua đời vào năm 1945, chủ sở hữu và huấn luyện viên của cô, Carl Spitz, đã chôn cất cô ở tầng hầm của mình.",
+            "start": 13.200000000000001,
+            "end": 20.12
+        },
+        {
+            "ID": 4,
+            "text": "tại Los Angeles.",
+            "start": 20.12,
+            "end": 22.240000000000002
+        },
+        {
+            "ID": 5,
+            "text": "Nhưng vào năm 1958, đường cao tốc Ventura được xây dựng ngay thông qua ngôi mộ của Terry.",
+            "start": 22.240000000000002,
+            "end": 29.48
+        },
+        {
+            "ID": 6,
+            "text": "Những phần còn lại của cô ấy bị rối loạn và chưa bao giờ được tìm thấy.",
+            "start": 29.48,
+            "end": 34.4
+        },
+        {
+            "ID": 7,
+            "text": "53 năm sau, một kỷ niệm đã được xây dựng tại Đám mộ vĩnh cửu Hollywood để tôn vinh cô.",
+            "start": 34.4,
+            "end": 40.52
+        },
+        {
+            "ID": 8,
+            "text": "Nhưng vì cô ấy không được chôn cất ở đó, bộ nhớ lại không phải là mộ.",
+            "start": 40.52,
+            "end": 45.72
+        },
+        {
+            "ID": 9,
+            "text": "Đó là những gì được gọi là một mộ synotaph và trống rỗng.",
+            "start": 45.72,
+            "end": 51.36
+        },
+        {
+            "ID": 10,
+            "text": "Tôi đã nhớ về Sinotaph của Toto khi tôi thấy Sinotaph của Filipopos trên đồi.",
+            "start": 51.36,
+            "end": 56.6
+        },
+        {
+            "ID": 11,
+            "text": "Các Muses ở Athens",
+            "start": 56.6,
+            "end": 59.08
+        },
+        {
+            "ID": 12,
+            "text": "Bạn thấy, tôi gần đây ở Hy Lạp đã nói về YouTube với các nhà sáng tạo YouTube.",
+            "start": 59.08,
+            "end": 63.8
+        },
+        {
+            "ID": 13,
+            "text": "Đôi mắt khôn ngoan của Guy đã đi qua và nhìn lại Acropolis, một cổng sư tử gần một ngàn người.",
+            "start": 63.8,
+            "end": 70.88
+        },
+        {
+            "ID": 14,
+            "text": "hơn nhiều năm so với Acropolis, máy tính analog đầu tiên được biết đến, rất đẹp",
+            "start": 70.88,
+            "end": 76.88
+        },
+        {
+            "ID": 15,
+            "text": "Chú mèo, và tôi thậm chí có một selfie ở Delphi.",
+            "start": 76.88,
+            "end": 81.96
+        },
+        {
+            "ID": 16,
+            "text": "Tôi đã nhìn thấy tất cả những điều này và họ đã già như thế nào.",
+            "start": 81.96,
+            "end": 86.56
+        },
+        {
+            "ID": 17,
+            "text": "Có lẽ bạn tự hỏi, chúng ta sẽ được nhớ như thế nào?",
+            "start": 86.56,
+            "end": 91.32000000000001
+        },
+        {
+            "ID": 18,
+            "text": "Các nhà khảo cổ tương lai sẽ phản ứng như thế nào với sự tàn phá của xã hội ngày nay?",
+            "start": 91.32000000000001,
+            "end": 96.48
+        },
+        {
+            "ID": 19,
+            "text": "Họ tìm thấy hàng ngàn năm từ bây giờ.",
+            "start": 96.48,
+            "end": 99.76
+        },
+        {
+            "ID": 20,
+            "text": "Họ sẽ làm một công việc tốt để làm cho nó cùng nhau?",
+            "start": 99.76,
+            "end": 103.32000000000001
+        },
+        {
+            "ID": 21,
+            "text": "Điều gì về bạn, đặc biệt, sẽ được ghi nhớ?",
+            "start": 103.32000000000001,
+            "end": 109.0
+        },
+        {
+            "ID": 22,
+            "text": "Và về vấn đề này, làm thế nào chúng ta thậm chí biết rằng quá khứ thực sự đã xảy ra?",
+            "start": 109.0,
+            "end": 115.32000000000001
+        },
+        {
+            "ID": 23,
+            "text": "Không chỉ như chúng ta nghĩ nó đã xảy ra, mà tất cả.",
+            "start": 115.32000000000001,
+            "end": 120.08000000000001
+        },
+        {
+            "ID": 24,
+            "text": "Thật nghiêm túc, bạn có thể chứng minh rằng vũ trụ không được tạo ra vào thứ Năm trước không?",
+            "start": 120.08000000000001,
+            "end": 127.36000000000001
+        },
+        {
+            "ID": 25,
+            "text": "Tất cả mọi thứ, mọi người, mọi ký ức mà bạn có, mọi bức ảnh mà bạn đã chụp, không",
+            "start": 127.36000000000001,
+            "end": 132.48000000000002
+        },
+        {
+            "ID": 26,
+            "text": "chỉ pop vào tồn tại tuần trước hoặc năm phút trước?",
+            "start": 132.48000000000002,
+            "end": 137.88
+        },
+        {
+            "ID": 27,
+            "text": "Chủ nhật cuối là niềm tin rằng vũ trụ được tạo ra vào thứ Năm ngoái.",
+            "start": 137.88,
+            "end": 144.20000000000002
+        },
+        {
+            "ID": 28,
+            "text": "Nó không có những người theo dõi hoặc nghi lễ thực sự, nhưng chứng minh nó sai là không thể.",
+            "start": 144.20000000000002,
+            "end": 151.76000000000002
+        },
+        {
+            "ID": 29,
+            "text": "Không phải vì vũ trụ thực sự được tạo ra vào thứ Năm ngoái, mà vì thứ Năm ngoái",
+            "start": 151.76000000000002,
+            "end": 157.52
+        },
+        {
+            "ID": 30,
+            "text": "Nó không thể giả, nó không thể được chứng minh là giả.",
+            "start": 157.52,
+            "end": 162.92000000000002
+        },
+        {
+            "ID": 31,
+            "text": "Bất kỳ bằng chứng nào bạn đưa ra chống lại nó có thể được giải thích như là một phần của tất cả",
+            "start": 162.92000000000002,
+            "end": 168.04000000000002
+        },
+        {
+            "ID": 32,
+            "text": "Điều này đã được tạo ra vào thứ Năm vừa qua.",
+            "start": 168.04000000000002,
+            "end": 171.64000000000001
+        },
+        {
+            "ID": 33,
+            "text": "Nhiều người tin rằng để một lý thuyết và giải thích trở thành khoa học, nó phải",
+            "start": 171.64000000000001,
+            "end": 177.48000000000002
+        },
+        {
+            "ID": 34,
+            "text": "có thể từ chối nó, để chứng minh nó sai, để kiểm tra nó.",
+            "start": 177.48000000000002,
+            "end": 182.0
+        },
+        {
+            "ID": 35,
+            "text": "Thay vào đó, thứ Năm cuối cùng rơi vào lĩnh vực triết học, nơi may mắn có",
+            "start": 182.0,
+            "end": 189.20000000000002
+        },
+        {
+            "ID": 36,
+            "text": "là racer, các quy tắc nhỏ của thảm giúp vứt bỏ những giải thích không thể tin được.",
+            "start": 189.20000000000002,
+            "end": 195.92000000000002
+        },
+        {
+            "ID": 37,
+            "text": "Người nổi tiếng nhất là Razor của Occam.",
+            "start": 195.92000000000002,
+            "end": 198.96
+        },
+        {
+            "ID": 38,
+            "text": "Khi đối mặt với sự lựa chọn giữa các giải thích, hãy chọn một trong những giả định yêu cầu ít nhất.",
+            "start": 198.96,
+            "end": 205.88000000000002
+        },
+        {
+            "ID": 39,
+            "text": "Khủng hoảng của Occam có thể phá vỡ thứ Năm trước, bởi vì nó đòi hỏi ít giả định để tin.",
+            "start": 205.88000000000002,
+            "end": 213.08
+        },
+        {
+            "ID": 40,
+            "text": "rằng, nói, ngôi mộ khỉ này được xây dựng trở lại vào thời Bronze và rằng tôi chỉ",
+            "start": 213.08,
+            "end": 219.92000000000002
+        },
+        {
+            "ID": 41,
+            "text": "Tôi đến thăm nó sau đó, sau đó nó tin rằng ngôi mộ, những ký ức của tôi về nó, và điều này",
+            "start": 219.92000000000002,
+            "end": 225.64000000000001
+        },
+        {
+            "ID": 42,
+            "text": "hình ảnh của tôi bên trong nó chỉ xảy ra để ngẫu nhiên pop vào tồn tại cùng một lúc",
+            "start": 225.64000000000001,
+            "end": 232.72000000000003
+        },
+        {
+            "ID": 43,
+            "text": "Thứ Năm",
+            "start": 232.72000000000003,
+            "end": 234.04000000000002
+        },
+        {
+            "ID": 44,
+            "text": "Một trong những loa triết học yêu thích của tôi cắt ra rất nhiều thứ, nó thậm chí không được gọi là một",
+            "start": 234.04000000000002,
+            "end": 240.32000000000002
+        },
+        {
+            "ID": 45,
+            "text": "Ấn Độ",
+            "start": 240.32000000000002,
+            "end": 241.32000000000002
+        },
+        {
+            "ID": 46,
+            "text": "Nó được gọi là Sword Laser Flaming của Newton.",
+            "start": 241.32000000000002,
+            "end": 245.64000000000001
+        },
+        {
+            "ID": 47,
+            "text": "Nó nói, nếu một cái gì đó không thể được giải quyết bằng thí nghiệm, thì nó không xứng đáng được thảo luận.",
+            "start": 245.64000000000001,
+            "end": 253.56
+        },
+        {
+            "ID": 48,
+            "text": "Vì vậy, chúng ta hãy chuyển sang quá khứ.",
+            "start": 253.56,
+            "end": 256.8
+        },
+        {
+            "ID": 49,
+            "text": "Cát Laser Flaming của Newton cho chúng ta biết gì về quá khứ?",
+            "start": 256.8,
+            "end": 259.84
+        },
+        {
+            "ID": 50,
+            "text": "Tôi có nghĩa là nó không tồn tại theo cùng một cách trọng lực hoặc ánh sáng hoặc proton làm.",
+            "start": 259.84,
+            "end": 265.44
+        },
+        {
+            "ID": 51,
+            "text": "Chúng ta không thể thực hiện các thí nghiệm trên nó, xây dựng các nhóm kiểm soát, tiến hành các thử nghiệm.",
+            "start": 265.44,
+            "end": 270.6
+        },
+        {
+            "ID": 52,
+            "text": "Quá khứ chỉ là những gì nó là.",
+            "start": 270.6,
+            "end": 275.16
+        },
+        {
+            "ID": 53,
+            "text": "Một ngày nào đó chúng ta sẽ là quá khứ, và bất kể chúng ta cố gắng ghi lại những câu chuyện của mình như thế nào, chúng ta,",
+            "start": 275.16,
+            "end": 283.12
+        },
+        {
+            "ID": 54,
+            "text": "Nếu không có máy thời gian, các nhà khảo cổ tương lai sẽ phải làm rất nhiều giả định.",
+            "start": 283.12,
+            "end": 287.88
+        },
+        {
+            "ID": 55,
+            "text": "Về chúng tôi.",
+            "start": 287.88,
+            "end": 289.68
+        },
+        {
+            "ID": 56,
+            "text": "Nhưng đó là loại mát mẻ.",
+            "start": 289.68,
+            "end": 292.0
+        },
+        {
+            "ID": 57,
+            "text": "Tương lai con người có thể sẽ biết nhiều hơn chúng ta ngày nay về y học, về các hành tinh ngoài hành tinh.",
+            "start": 292.0,
+            "end": 297.92
+        },
+        {
+            "ID": 58,
+            "text": "về vật lý, nhưng một điều họ gần như chắc chắn sẽ không biết nhiều hơn so với những gì chúng ta làm hôm nay là.",
+            "start": 297.92,
+            "end": 307.88
+        },
+        {
+            "ID": 59,
+            "text": "Các ông bà lớn, vĩ đại, vĩ đại, vĩ đại sẽ biết tên ông sao?",
+            "start": 307.88,
+            "end": 312.44
+        },
+        {
+            "ID": 60,
+            "text": "Người ngoài hành tinh đến thăm Trái đất hàng triệu năm sau khi con người rời đi hoặc biến mất sẽ hiểu",
+            "start": 312.44,
+            "end": 318.88
+        },
+        {
+            "ID": 61,
+            "text": "Những con vật đó chỉ là trí tưởng tượng chứ không phải là lịch sử của dân chúng ta?",
+            "start": 318.88,
+            "end": 325.84
+        },
+        {
+            "ID": 62,
+            "text": "Bạn được định hướng trở thành bất cứ điều gì tương lai nghĩ bạn là.",
+            "start": 325.84,
+            "end": 331.64
+        },
+        {
+            "ID": 63,
+            "text": "Nếu bạn may mắn, vandals, lửa, thảm họa tự nhiên, người chinh phục, kẻ trộm, tất cả các lực lượng này",
+            "start": 331.64,
+            "end": 338.44
+        },
+        {
+            "ID": 64,
+            "text": "Những sự thật mù quáng theo thời gian.",
+            "start": 338.44,
+            "end": 341.24
+        },
+        {
+            "ID": 65,
+            "text": "Nhưng bất kể chúng ta cố gắng bảo tồn ngày hôm nay cho các cuốn sách lịch sử trong tương lai như thế nào, có một",
+            "start": 341.24,
+            "end": 347.24
+        },
+        {
+            "ID": 66,
+            "text": "Loại hỏa hoạn mà chúng ta không thể tránh được.",
+            "start": 347.24,
+            "end": 352.64
+        },
+        {
+            "ID": 67,
+            "text": "Apathy là",
+            "start": 352.64,
+            "end": 353.64
+        },
+        {
+            "ID": 68,
+            "text": "Ira Glass đã làm tốt khi ông hỏi người nghe một câu hỏi đơn giản, đặt tên cho 10 người từ",
+            "start": 353.64,
+            "end": 360.47999999999996
+        },
+        {
+            "ID": 69,
+            "text": "thế kỷ thứ 15.",
+            "start": 360.48,
+            "end": 364.68
+        },
+        {
+            "ID": 70,
+            "text": "Chúng tôi có hồ sơ của hơn 10 người, nhưng đối với hầu hết chúng tôi, họ không quan trọng.",
+            "start": 364.68,
+            "end": 370.92
+        },
+        {
+            "ID": 71,
+            "text": "Trong 500 năm nữa, các chủ radio sẽ làm những trò đùa tương tự, nhưng về chúng tôi.",
+            "start": 370.92,
+            "end": 376.6
+        },
+        {
+            "ID": 72,
+            "text": "Tuy nhiên, có một di sản mà bạn để lại sau đó là không thể đảo ngược, không thể thay đổi và một cách",
+            "start": 376.6,
+            "end": 386.20000000000005
+        },
+        {
+            "ID": 73,
+            "text": "không thể quên",
+            "start": 386.2,
+            "end": 388.28
+        },
+        {
+            "ID": 74,
+            "text": "Để tiết kiệm năng lượng, tắt khi không sử dụng.",
+            "start": 388.28,
+            "end": 392.76
+        },
+        {
+            "ID": 75,
+            "text": "Hoặc chỉ cần giữ chúng.",
+            "start": 392.76,
+            "end": 394.76
+        },
+        {
+            "ID": 76,
+            "text": "Năng lượng sẽ được tiết kiệm bất kể bạn làm gì.",
+            "start": 394.76,
+            "end": 398.48
+        },
+        {
+            "ID": 77,
+            "text": "Ngay cả khi bạn rời khỏi ánh sáng trong suốt cả năm, sẽ không có ít hoặc nhiều năng lượng trong vũ trụ.",
+            "start": 398.48,
+            "end": 404.8
+        },
+        {
+            "ID": 78,
+            "text": "Những gì thực sự được bảo tồn khi chúng ta tắt đèn là các nguồn lực mà chúng ta chuyển sang",
+            "start": 404.8,
+            "end": 410.12
+        },
+        {
+            "ID": 79,
+            "text": "năng lượng mà ánh sáng có thể sử dụng.",
+            "start": 410.12,
+            "end": 412.8
+        },
+        {
+            "ID": 80,
+            "text": "Nhưng nếu bạn đếm tất cả năng lượng trong hệ thống trước và sau khi quay đèn",
+            "start": 412.8,
+            "end": 417.64
+        },
+        {
+            "ID": 81,
+            "text": "Hơn nữa, nó sẽ giống nhau.",
+            "start": 417.64,
+            "end": 420.84000000000003
+        },
+        {
+            "ID": 82,
+            "text": "Năng lượng cũng làm điều gì đó khác, trừ khi bị cản trở, năng lượng sẽ lan ra.",
+            "start": 420.84000000000003,
+            "end": 428.84000000000003
+        },
+        {
+            "ID": 83,
+            "text": "Nó sẽ phân tán.",
+            "start": 428.84000000000003,
+            "end": 431.08000000000004
+        },
+        {
+            "ID": 84,
+            "text": "Đó là, trong rất ít từ, luật thứ hai của nhiệt động học.",
+            "start": 431.08000000000004,
+            "end": 435.40000000000003
+        },
+        {
+            "ID": 85,
+            "text": "Đó là cách vũ trụ của chúng ta hoạt động.",
+            "start": 435.40000000000003,
+            "end": 437.6
+        },
+        {
+            "ID": 86,
+            "text": "Đó là lý do tại sao những điều xảy ra một cách tự phát.",
+            "start": 437.6,
+            "end": 442.6
+        },
+        {
+            "ID": 87,
+            "text": "Năng lượng lây lan, ngay cả khi một quá trình tập trung năng lượng địa phương, như khi một tinh thể hình thành",
+            "start": 442.6,
+            "end": 448.96000000000004
+        },
+        {
+            "ID": 88,
+            "text": "Hay cuộc sống phát triển.",
+            "start": 448.96000000000004,
+            "end": 450.88
+        },
+        {
+            "ID": 89,
+            "text": "Luật thứ hai không bị vi phạm bởi vì các quy trình này không độc lập với các quy trình lớn hơn.",
+            "start": 450.88,
+            "end": 456.0
+        },
+        {
+            "ID": 90,
+            "text": "Thế giới xung quanh họ.",
+            "start": 456.0,
+            "end": 457.44
+        },
+        {
+            "ID": 91,
+            "text": "Họ không 100% hiệu quả.",
+            "start": 457.44,
+            "end": 460.12
+        },
+        {
+            "ID": 92,
+            "text": "Những trở ngại có thể ngăn chặn sự lây lan không thể tránh khỏi của năng lượng trong một thời gian dài.",
+            "start": 460.12,
+            "end": 464.36
+        },
+        {
+            "ID": 93,
+            "text": "Luật thứ hai không nói khi nào năng lượng sẽ phân tán, chỉ là khi nó có thể, oh nó sẽ.",
+            "start": 464.36,
+            "end": 472.28000000000003
+        },
+        {
+            "ID": 94,
+            "text": "Các looms sẽ biến mất, các đối tượng sẽ rơi, các đối tượng nóng sẽ được làm mát xuống và nước hoa sẽ được bôi trơn",
+            "start": 472.28000000000003,
+            "end": 479.64000000000004
+        },
+        {
+            "ID": 95,
+            "text": "qua phòng cuối cùng sẽ di chuyển đến mũi của bạn, ngay cả trong không khí thực sự yên tĩnh.",
+            "start": 479.64000000000004,
+            "end": 486.56000000000006
+        },
+        {
+            "ID": 96,
+            "text": "Bao nhiêu hoặc bao nhiêu năng lượng đã lan ra được đo bằng entropy.",
+            "start": 486.56000000000006,
+            "end": 493.24
+        },
+        {
+            "ID": 97,
+            "text": "Năng lượng thường được gọi là rối loạn, hỗn loạn, nhưng entropy rất khác so với mệt mỏi macroscopic.",
+            "start": 493.24,
+            "end": 503.04
+        },
+        {
+            "ID": 98,
+            "text": "Bộ đồ này được chủ đề bởi các nhà triết học Hy Lạp.",
+            "start": 503.04,
+            "end": 507.24
+        },
+        {
+            "ID": 99,
+            "text": "Nó cũng được sắp xếp theo giá trị và phù hợp với toàn bộ vỏ.",
+            "start": 507.24,
+            "end": 511.76
+        },
+        {
+            "ID": 100,
+            "text": "Nhưng nếu tôi lấy vỏ và xé nó, tức là, làm phiền nó, tôi thực sự không tăng",
+            "start": 511.76,
+            "end": 519.5600000000001
+        },
+        {
+            "ID": 101,
+            "text": "entropy của thảm vì không có gì về thảm này của năng lượng của thẻ khác so với",
+            "start": 519.5600000000001,
+            "end": 525.44
+        },
+        {
+            "ID": 102,
+            "text": "Đó là trước đây.",
+            "start": 525.44,
+            "end": 527.0400000000001
+        },
+        {
+            "ID": 103,
+            "text": "Tuy nhiên, entropy trong thế giới lớn hơn xung quanh chúng ta đã tăng lên bởi vì để thả",
+            "start": 527.0400000000001,
+            "end": 534.0400000000001
+        },
+        {
+            "ID": 104,
+            "text": "Các thẻ, cơ thể của tôi phải làm việc.",
+            "start": 534.0400000000001,
+            "end": 537.2
+        },
+        {
+            "ID": 105,
+            "text": "Nó phải lấy năng lượng tập trung trong các tế bào của tôi và thay đổi và phân tán năng lượng đó vào",
+            "start": 537.2,
+            "end": 542.12
+        },
+        {
+            "ID": 106,
+            "text": "năng lượng kinetic, chuyển động, và một chút nhiệt từ cơ thể của tôi và từ các thẻ treo",
+            "start": 542.12,
+            "end": 547.36
+        },
+        {
+            "ID": 107,
+            "text": "Và một chút năng lượng âm thanh làm rung động tiếng ồn.",
+            "start": 547.36,
+            "end": 553.2
+        },
+        {
+            "ID": 108,
+            "text": "Vì vậy, đó là di sản thực sự của bạn, đóng góp của bạn cho entropy ngày càng tăng của vũ trụ.",
+            "start": 553.2,
+            "end": 561.32
+        },
+        {
+            "ID": 109,
+            "text": "Không có quá trình nào sẽ có thể ngăn chặn sự gia tăng net trong entropy mà bạn đạt được trong cuộc sống của bạn.",
+            "start": 561.32,
+            "end": 569.92
+        },
+        {
+            "ID": 110,
+            "text": "Lịch sử có thể quên bạn hoặc hiểu sai những thành tựu của bạn hoặc những gì bạn đứng trước.",
+            "start": 569.92,
+            "end": 575.16
+        },
+        {
+            "ID": 111,
+            "text": "Các vết nứt bạn bỏ lại có thể được chuyển hướng, nhưng vũ trụ sẽ không bao giờ có thể quên",
+            "start": 575.16,
+            "end": 581.7199999999999
+        },
+        {
+            "ID": 112,
+            "text": "entropy mà bạn thêm.",
+            "start": 581.7199999999999,
+            "end": 585.0799999999999
+        },
+        {
+            "ID": 113,
+            "text": "Đó là luật, luật thứ hai của nhiệt động học.",
+            "start": 585.0799999999999,
+            "end": 589.92
+        },
+        {
+            "ID": 114,
+            "text": "Nhiều nhà khoa học tin rằng điều này có nghĩa là cuối cùng năng lượng, nhiệt, sẽ hoàn toàn",
+            "start": 589.92,
+            "end": 596.52
+        },
+        {
+            "ID": 115,
+            "text": "phát triển bình đẳng trên khắp vũ trụ.",
+            "start": 596.52,
+            "end": 600.1999999999999
+        },
+        {
+            "ID": 116,
+            "text": "Nó sẽ là nhiệt độ tương tự ở khắp mọi nơi và tại thời điểm đó, không có gì sẽ có thể",
+            "start": 600.2,
+            "end": 606.72
+        },
+        {
+            "ID": 117,
+            "text": "xảy ra",
+            "start": 606.72,
+            "end": 608.12
+        },
+        {
+            "ID": 118,
+            "text": "Bởi vì để có điều gì đó xảy ra, entropy cần tăng, năng lượng cần lan rộng",
+            "start": 608.12,
+            "end": 612.88
+        },
+        {
+            "ID": 119,
+            "text": "để di chuyển để thay đổi.",
+            "start": 612.88,
+            "end": 615.48
+        },
+        {
+            "ID": 120,
+            "text": "Đây có thể là số phận cuối cùng của vũ trụ, sự cân bằng nhiệt động, độ sâu nhiệt",
+            "start": 615.48,
+            "end": 624.08
+        },
+        {
+            "ID": 121,
+            "text": "của vũ trụ.",
+            "start": 624.08,
+            "end": 626.2800000000001
+        },
+        {
+            "ID": 122,
+            "text": "Nó đã được ước tính rằng khi mọi thứ xảy ra, kết thúc của vũ trụ này sẽ xảy ra.",
+            "start": 626.28,
+            "end": 631.28
+        },
+        {
+            "ID": 123,
+            "text": "trong khoảng một năm Google và đóng góp của bạn cho nó bằng cách chỉ đơn giản là tồn tại.",
+            "start": 631.28,
+            "end": 638.8
+        },
+        {
+            "ID": 124,
+            "text": "Một hậu quả thú vị của tất cả điều này là thực tế là những người không hoạt động rất nhiều, những người",
+            "start": 638.8,
+            "end": 644.24
+        },
+        {
+            "ID": 125,
+            "text": "Những người không làm nhiều nhưng nằm xung quanh, không chỉ là lười biếng.",
+            "start": 644.24,
+            "end": 649.3199999999999
+        },
+        {
+            "ID": 126,
+            "text": "Một cách nào đó, họ đang được xem xét.",
+            "start": 649.32,
+            "end": 652.96
+        },
+        {
+            "ID": 127,
+            "text": "Sloth có thể là một sai lầm, nhưng đối với vũ trụ, nó là một nguồn của tuổi trẻ.",
+            "start": 652.96,
+            "end": 659.88
+        },
+        {
+            "ID": 128,
+            "text": "Lựa chọn làm càng ít càng tốt có nghĩa là có ý thức giới hạn đóng góp của bạn cho",
+            "start": 659.88,
+            "end": 665.4000000000001
+        },
+        {
+            "ID": 129,
+            "text": "sự phân tán không thể tránh khỏi của năng lượng và do đó trong một cách thiếu niên nhỏ trì hoãn độ sâu nhiệt",
+            "start": 665.4000000000001,
+            "end": 672.7600000000001
+        },
+        {
+            "ID": 130,
+            "text": "của vũ trụ của chúng ta.",
+            "start": 672.7600000000001,
+            "end": 676.0400000000001
+        },
+        {
+            "ID": 131,
+            "text": "Sự tồn tại thêm thời gian cho cuộc sống của vũ trụ, một số thời gian để công bằng gần như không thể phân biệt được.",
+            "start": 676.04,
+            "end": 682.5999999999999
+        },
+        {
+            "ID": 132,
+            "text": "từ chín, nhưng vẫn thực tế về mặt lý thuyết, sự lười biếng sẽ làm cho vũ trụ tồn tại lâu hơn.",
+            "start": 682.5999999999999,
+            "end": 692.4
+        },
+        {
+            "ID": 133,
+            "text": "Vì vậy, cảm ơn bạn đã làm lạnh, cảm ơn bạn đã lấy nó dễ dàng, và như mọi khi, cảm ơn bạn đã xem.",
+            "start": 692.4,
+            "end": 699.52
+        }
+    ]
+}

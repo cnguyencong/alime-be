@@ -10,8 +10,6 @@ import (
 	uuid "github.com/google/uuid"
 	"github.com/joho/godotenv"
 
-	"alime-be/controllers"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -45,24 +43,6 @@ func RequestIDMiddleware() gin.HandlerFunc {
 	}
 }
 
-// var auth = new(controllers.AuthController)
-
-// TokenAuthMiddleware ...
-// JWT Authentication middleware attached to each request that needs to be authenitcated to validate the access_token in the header
-// func TokenAuthMiddleware() gin.HandlerFunc {
-// 	return func(c *gin.Context) {
-// 		auth.TokenValid(c)
-// 		c.Next()
-// 	}
-// }
-
-func loadEmbeddedFiles() {
-	// Extract embedded files
-	if err := controllers.ExtractEmbeddedFiles(); err != nil {
-		log.Fatalf("Failed to extract embedded files: %v", err)
-	}
-}
-
 func main() {
 
 	//Load the .env file
@@ -75,8 +55,6 @@ func main() {
 	if os.Getenv("ENV") == "production" {
 		gin.SetMode(gin.ReleaseMode)
 	}
-
-	loadEmbeddedFiles()
 
 	//Start the default gin server
 	r := gin.New()

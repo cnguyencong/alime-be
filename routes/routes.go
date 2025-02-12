@@ -13,6 +13,9 @@ func SetupRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	{
 		api.POST("/upload", controllers.HandleFileUpload)
+		api.POST("/translate", controllers.HandleTranslate)
+
+		// api.POST("/download-video", controllers.HandleDownloadVideo)
 	}
 }
 
