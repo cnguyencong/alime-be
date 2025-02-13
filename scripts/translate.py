@@ -7,41 +7,39 @@ import json
 from tqdm import tqdm
 
 
-def translate_text(text, model, tokenizer, device, target_lang="vi", max_length=512):
-    """Translate text to a specific language using a Hugging Face model."""
+def translate_text(
+    batch_texts, model, tokenizer, device, target_lang="vi", max_length=512
+):
+    """Translate a batch of texts at once."""
 
-    # Tokenize the input text
+    # Tokenize input batch
     inputs = tokenizer(
-        text, return_tensors="pt", padding=True, truncation=True, max_length=max_length
+        batch_texts,
+        return_tensors="pt",
+        padding=True,
+        truncation=True,
+        max_length=max_length,
     )
     inputs = {k: v.to(device) for k, v in inputs.items()}
 
-    # Generate translation
+    # Generate translations
     with torch.no_grad():
         outputs = model.generate(
-            **inputs, max_length=max_length, num_beams=5, length_penalty=1.0,
-            forced_bos_token_id=tokenizer.lang_code_to_id[f"{target_lang}"]
+            **inputs,
+            max_length=max_length,
+            num_beams=4,
+            length_penalty=1.0,
+            forced_bos_token_id=tokenizer.lang_code_to_id[target_lang],
         )
 
-    # Decode the output
-    translation = tokenizer.decode(outputs[0], skip_special_tokens=True)
-
-    return translation
+    # Decode the batch
+    return tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
 
 def translate_json(
-    input_file, output_file, model_name, batch_size=8, device=None, target_language="vi"
+    input_file, output_file, model_name, batch_size=8, device=None, target_language="Vie_Latn"
 ):
-    """
-    Translate an json file using a Hugging Face translation model
-
-    Parameters:
-    - input_file: Path to input JSON file
-    - output_file: Path to output translated JSON file
-    - model_name: Name of the Hugging Face model to use
-    - batch_size: Number of segments to translate at once
-    - device: Device to use for translation (cuda/cpu)
-    """
+    """Optimized translation using batched processing"""
 
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -49,63 +47,48 @@ def translate_json(
     print(f"\nUsing device: {device}")
     if device == "cuda":
         print(f"GPU: {torch.cuda.get_device_name(0)}")
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device).half()
+    else:
+        model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)
+
 
     # Load model and tokenizer
     print(f"\nLoading model: {model_name}")
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)
     tokenizer = AutoTokenizer.from_pretrained(model_name)
-
-    # Read input SRT file
+    # Read JSON input
     print("\nReading JSON file...")
     with open(input_file, "r", encoding="utf-8") as f:
         data = json.load(f)
-        # content = f.read()
 
-    # Split into blocks
-    # blocks = re.split('\n\n+', content.strip())
     blocks = data.get("segments", [])
     translated_blocks = []
 
     for i in tqdm(range(0, len(blocks), batch_size)):
-        batch_blocks = blocks[i : i + batch_size]
-        for block in batch_blocks:
+        batch = blocks[i : i + batch_size]
+        batch_texts = [b["text"] for b in batch]
 
-            translation = translate_text(
-                block.get("text"), model, tokenizer, device, target_lang=target_language
+        # 🔥 Batch translation 🔥
+        translations = translate_text(
+            batch_texts, model, tokenizer, device, target_lang=target_language
+        )
+
+        # Store results
+        for block, translation in zip(batch, translations):
+            translated_blocks.append(
+                {
+                    "id": block.get("id"),
+                    "text": translation,
+                    "start": block.get("start"),
+                    "end": block.get("end"),
+                }
             )
-            print(translation)
-            # parsed = split_srt_block(block)
 
-            translated_block = {
-                "ID": block.get("ID"),
-                "text": translation,
-                "start": block.get("start"),
-                "end": block.get("end"),
-            }
-            translated_blocks.append(translated_block)
-
-    # Write translated JSON
+    # Save translated JSON
     print("\nWriting translated JSON file...")
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump({"segments": translated_blocks}, f, indent=4, ensure_ascii=False)
 
     print(f"\nTranslation completed! Output saved to: {output_file}")
-
-    # if parsed:
-    # idx, timestamp, text = parsed
-
-    # translated_block = f"{idx}\n{timestamp}\n{translation}"
-    # batch_translations.append(translated_block)
-
-    # translated_blocks.extend(batch_translations)
-
-    # Write translated SRT
-    # print("\nWriting translated SRT file...")
-    # with open(output_file, 'w', encoding='utf-8') as f:
-    #     f.write('\n\n'.join(translated_blocks))
-
-    # print(f"\nTranslation completed! Output saved to: {output_file}")
-    # return output_file
 
 
 def main():
@@ -115,7 +98,7 @@ def main():
     parser.add_argument("input_file", help="Path to input JSON file")
     parser.add_argument(
         "--model",
-        default="facebook/m2m100_418M",
+        default="facebook/nllb-200-distilled-600M",
         help="Hugging Face model to use for translation",
     )
     parser.add_argument(

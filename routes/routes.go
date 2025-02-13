@@ -12,10 +12,12 @@ func SetupRoutes(r *gin.Engine) {
 	SetupEssentialRoutes(r)
 	api := r.Group("/api")
 	{
-		api.POST("/upload", controllers.HandleFileUpload)
+		api.POST("/upload", controllers.HandleGenerateTranscribe)
 		api.POST("/translate", controllers.HandleTranslate)
+		api.POST("/download-video", controllers.HandleDownloadVideoWithCaption)
 
-		// api.POST("/download-video", controllers.HandleDownloadVideo)
+		// New route for downloading subtitled videos
+		api.GET("/download-subtitled-video", controllers.DownloadSubtitledVideo)
 	}
 }
 

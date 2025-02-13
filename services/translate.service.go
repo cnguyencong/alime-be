@@ -2,73 +2,187 @@ package services
 
 import (
 	"alime-be/types"
+	"encoding/json"
+	"fmt"
 	"log"
+	"os"
+	"os/exec"
+	"path/filepath"
+	"strings"
 )
-
-var languageAlias = map[string]string{
-	"en": "",
-	"vi": "",
-	"fr": "",
-}
 
 func TranslateSegments(segments []types.Segment, lang string) (map[string]interface{}, error) {
 	log.Printf("lang: %s", lang)
-	// log.Printf("lang: %s", translatedSegments)
+
+	langCode := loadLanguageCode(lang)
+	if langCode == "" {
+		return nil, fmt.Errorf("can't find target language")
+	}
+
+	segmentsFilePath, err := saveTemporarySegmentFile(segments, langCode)
+	if err != nil {
+		return nil, fmt.Errorf("can't save segments to file: %v", err)
+	}
+
+	return processTranslateScript(segmentsFilePath, langCode)
+}
+
+func saveTemporarySegmentFile(segments []types.Segment, langCode string) (string, error) {
+	// save segments to json file
+	segmentsJSON := struct {
+		Segments []types.Segment `json:"segments"`
+	}{
+		Segments: segments,
+	}
+
+	jsonData, err := json.Marshal(segmentsJSON)
+	if err != nil {
+		return "", fmt.Errorf("can't convert segments to json: %v", err)
+	}
+
+	err = os.MkdirAll("temporary-data", os.ModePerm)
+	if err != nil {
+		return "", fmt.Errorf("can't create folder: %v", err)
+	}
+
+	segmentsFilePath := fmt.Sprintf("temporary-data/segments_%s.json", langCode)
+	segmentsFile, err := os.Create(segmentsFilePath)
+	if err != nil {
+		return "", fmt.Errorf("can't create json file: %v", err)
+	}
+	defer segmentsFile.Close()
+
+	_, err = segmentsFile.Write(jsonData)
+	if err != nil {
+		return "", fmt.Errorf("can't write segments to json file: %v", err)
+	}
+
+	return segmentsFilePath, nil
+
+}
+
+func processTranslateScript(filename string, langCode string) (map[string]interface{}, error) {
+
+	outputDir := filepath.Join(".", "translated_output")
+	if err := os.MkdirAll(outputDir, 0755); err != nil {
+		return nil, fmt.Errorf("failed to create output directory: %v", err)
+	}
+
+	scriptPath := filepath.Join(".", "scripts/translate.py")
+
+	args := []string{
+		scriptPath,
+		filename,
+		"--target-language", langCode,
+		"--output-dir", outputDir,
+	}
+
+	cmd := exec.Command("python", args...)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return nil, fmt.Errorf("translate process failed: %v\nError output: %s", err, string(output))
+	}
+
+	// cmd := exec.Command("python", args...)
+
+	// // Detach from stdin and set up output pipes
+	// cmd.Stdin = nil
+	// stdout, err := cmd.StdoutPipe()
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to create stdout pipe: %v", err)
+	// }
+	// stderr, err := cmd.StderrPipe()
+	// if err != nil {
+	// 	return nil, fmt.Errorf("failed to create stderr pipe: %v", err)
+	// }
+
+	// // Start command
+	// log.Printf("Executing command: python %s", strings.Join(args, " "))
+	// if err := cmd.Start(); err != nil {
+	// 	return nil, fmt.Errorf("failed to start command: %v", err)
+	// }
+
+	// // Handle output in real-time
+	// var output, errorOutput strings.Builder
+	// go io.Copy(io.MultiWriter(&output, os.Stdout), stdout)
+	// go io.Copy(io.MultiWriter(&errorOutput, os.Stderr), stderr)
+
+	// // Wait for completion
+	// if err := cmd.Wait(); err != nil {
+	// 	return nil, fmt.Errorf("whisper process failed: %v\nError output: %s", err, errorOutput.String())
+	// }
+
+	baseFileName := filepath.Base(filename)
+	ext := filepath.Ext(baseFileName)
+	outputFile := filepath.Join(outputDir, strings.TrimSuffix(baseFileName, ext)+"_translated.json")
+
+	// Read the output file
+	outputContent, err := os.ReadFile(outputFile)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read output file: %v", err)
+	}
+
+	// Parse the JSON response
+	var whisperResp types.WhisperResponse
+	if err := json.Unmarshal(outputContent, &whisperResp); err != nil {
+		return nil, fmt.Errorf("failed to parse whisper output: %v", err)
+	}
 
 	return map[string]interface{}{
 		"success":  true,
-		"segments": "",
+		"segments": whisperResp.Segments,
 	}, nil
 }
 
-// func getModelName(lang string) string {
-// 	return LanguagesModels[lang]
-// }
+func loadLanguageCode(lang string) string {
+	jsonFile, err := os.Open(filepath.Join(".", "/services/translating_code.json"))
+	if err != nil {
+		log.Printf("can't open json file: %v", err)
+		return ""
+	}
+	defer jsonFile.Close()
 
-// func generateSRTFile(segments []map[string]interface{}, outputDir, baseFileName string) error {
-// 	// Create SRT filename
-// 	srtFileName := filepath.Join(".", strings.TrimSuffix(baseFileName, filepath.Ext(baseFileName))+".srt")
+	var languages map[string]string
+	jsonParser := json.NewDecoder(jsonFile)
+	jsonParser.Decode(&languages)
 
-// 	// Create or truncate the SRT file
-// 	file, err := os.Create(srtFileName)
+	if lang, ok := languages[lang]; ok {
+		return lang
+	}
+
+	return ""
+}
+
+// func execScriptWithDebug(args ...string) {
+// 	cmd := exec.Command("python", args...)
+
+// 	// Detach from stdin and set up output pipes
+// 	cmd.Stdin = nil
+// 	stdout, err := cmd.StdoutPipe()
 // 	if err != nil {
-// 		return fmt.Errorf("failed to create SRT file: %v", err)
+// 		log.Fatalf("failed to create stdout pipe: %v", err)
 // 	}
-// 	defer file.Close()
-
-// 	// Format time for SRT (HH:MM:SS,mmm)
-// 	formatTime := func(seconds float64) string {
-// 		duration := time.Duration(seconds * float64(time.Second))
-// 		hours := int(duration.Hours())
-// 		minutes := int(duration.Minutes()) % 60
-// 		secs := int(duration.Seconds()) % 60
-// 		milliseconds := int(duration.Milliseconds()) % 1000
-
-// 		return fmt.Sprintf("%02d:%02d:%02d,%03d", hours, minutes, secs, milliseconds)
+// 	stderr, err := cmd.StderrPipe()
+// 	if err != nil {
+// 		log.Fatalf("failed to create stderr pipe: %v", err)
 // 	}
 
-// 	// Write segments to file
-// 	for i, segment := range segments {
-// 		// Write segment number
-// 		_, err := fmt.Fprintf(file, "%d\n", i+1)
-// 		if err != nil {
-// 			return fmt.Errorf("failed to write segment number: %v", err)
-// 		}
-
-// 		// Write timestamp
-// 		start := segment["start"].(float64)
-// 		end := segment["end"].(float64)
-// 		_, err = fmt.Fprintf(file, "%s --> %s\n", formatTime(start), formatTime(end))
-// 		if err != nil {
-// 			return fmt.Errorf("failed to write timestamp: %v", err)
-// 		}
-
-// 		// Write text and blank line
-// 		_, err = fmt.Fprintf(file, "%s\n\n", segment["text"].(string))
-// 		if err != nil {
-// 			return fmt.Errorf("failed to write text: %v", err)
-// 		}
+// 	// Start command
+// 	log.Printf("Executing command: python %s", strings.Join(args, " "))
+// 	if err := cmd.Start(); err != nil {
+// 		log.Fatalf("failed to start command: %v", err)
 // 	}
 
-// 	return nil
+// 	// Handle output in real-time
+// 	var output, errorOutput strings.Builder
+// 	go io.Copy(io.MultiWriter(&output, os.Stdout), stdout)
+// 	go io.Copy(io.MultiWriter(&errorOutput, os.Stderr), stderr)
+
+// 	// Wait for completion
+// 	if err := cmd.Wait(); err != nil {
+// 		log.Fatalf("whisper process failed: %v\nError output: %s", err, errorOutput.String())
+// 	}
+
+// 	return output.String(), nil
+
 // }

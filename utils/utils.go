@@ -27,6 +27,22 @@ func IsMediaFileType(fileType string) bool {
 	return false
 }
 
+func CleanDir(directory string) {
+	files, err := os.ReadDir(directory)
+	if err != nil {
+		log.Printf("Failed to read directory for cleanup: %v", err)
+		return
+	}
+	for _, file := range files {
+		filePath := filepath.Join(directory, file.Name())
+		if err := os.Remove(filePath); err != nil {
+			log.Printf("Failed to cleanup old file %s: %v", filePath, err)
+		} else {
+			log.Printf("Cleaned up old file: %s", filePath)
+		}
+	}
+}
+
 func CleanFileWithTime(directory string, maxAge time.Duration) {
 	// Read directory contents
 	files, err := os.ReadDir(directory)

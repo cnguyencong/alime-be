@@ -15,3 +15,8 @@ type Segment struct {
 type WhisperResponse struct {
 	Segments []Segment `json:"segments"`
 }
+
+type ExportVideoRequest struct {
+	ProcessId string                   `json:"processId"`
+	Segments  []map[string]interface{} `json:"segments"`
+}

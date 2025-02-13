@@ -1,6 +1,7 @@
 package main
 
 import (
+	"alime-be/db"
 	"alime-be/routes"
 	"fmt"
 	"log"
@@ -44,6 +45,7 @@ func RequestIDMiddleware() gin.HandlerFunc {
 }
 
 func main() {
+	db.InitDB()
 
 	//Load the .env file
 	err := godotenv.Load(".env")

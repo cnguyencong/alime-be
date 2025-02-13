@@ -2,6 +2,7 @@ package services
 
 import (
 	"alime-be/types"
+	"time"
 
 	"encoding/json"
 	"fmt"
@@ -9,9 +10,11 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
-func ProcessTranscriptionScript(filename string) (map[string]interface{}, error) {
+func ProcessTranscriptionScript(filename string, processID string) (map[string]interface{}, error) {
 	model := "base"
 
 	outputDir := filepath.Join(".", "output")
@@ -51,97 +54,118 @@ func ProcessTranscriptionScript(filename string) (map[string]interface{}, error)
 		return nil, fmt.Errorf("failed to parse whisper output: %v", err)
 	}
 
-	// Generate SRT file if requested
-	// if contains(outputFormats, "srt") {
-	// 	if err := generateSRTFile(simplifiedSegments, outputDir, baseFileName); err != nil {
-	// 		log.Printf("Failed to generate SRT file: %v", err)
-	// 		// Continue execution even if SRT generation fails
-	// 	}
-	// }
-
 	return map[string]interface{}{
-		"success":  true,
-		"segments": whisperResp.Segments,
+		"success":   true,
+		"processID": processID,
+		"segments":  whisperResp.Segments,
 	}, nil
-
 }
 
-// func execScriptWithDebug(args ...string) (map[string]interface{}, error) {
-// 	cmd := exec.Command("python", args...)
+func MergeSubtitleToVideo(filename string, segments []types.Segment) (map[string]interface{}, error) {
+	outputDir := filepath.Dir(filename)
+	baseFileName := filepath.Base(filename)
 
-// 	// Detach from stdin and set up output pipes
-// 	cmd.Stdin = nil
-// 	stdout, err := cmd.StdoutPipe()
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to create stdout pipe: %v", err)
-// 	}
-// 	stderr, err := cmd.StderrPipe()
-// 	if err != nil {
-// 		return nil, fmt.Errorf("failed to create stderr pipe: %v", err)
-// 	}
+	// Generate SRT file
+	err := generateSRTFile(segments, outputDir, filename)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate SRT file: %v", err)
+	}
 
-// 	// Start command
-// 	log.Printf("Executing command: python %s", strings.Join(args, " "))
-// 	if err := cmd.Start(); err != nil {
-// 		return nil, fmt.Errorf("failed to start command: %v", err)
-// 	}
+	videoPath := filename
+	srtPath := filepath.Join(outputDir, strings.TrimSuffix(baseFileName, filepath.Ext(baseFileName))+".srt")
+	outputVideoPath := filepath.Join(".", "output_subtitled", "subtitled_"+string(uuid.New().String())+"_"+baseFileName)
 
-// 	// Handle output in real-time
-// 	var output, errorOutput strings.Builder
-// 	go io.Copy(io.MultiWriter(&output, os.Stdout), stdout)
-// 	go io.Copy(io.MultiWriter(&errorOutput, os.Stderr), stderr)
+	// Ensure paths are absolute and use forward slashes
+	videoPath = filepath.ToSlash(filepath.Clean(videoPath))
+	srtPath = filepath.ToSlash(filepath.Clean(srtPath))
+	outputVideoPath = filepath.ToSlash(filepath.Clean(outputVideoPath))
 
-// 	// Wait for completion
-// 	if err := cmd.Wait(); err != nil {
-// 		return nil, fmt.Errorf("whisper process failed: %v\nError output: %s", err, errorOutput.String())
-// 	}
+	// Create output directory
+	if err := os.MkdirAll(filepath.Dir(outputVideoPath), 0755); err != nil {
+		return nil, fmt.Errorf("failed to create output subtitled directory: %v", err)
+	}
 
-// }
+	// Prepare FFmpeg command
+	cmd := exec.Command("ffmpeg",
+		"-i", videoPath,
+		"-vf", "subtitles="+srtPath,
+		"-c:a", "copy",
+		outputVideoPath)
 
-// // func generateSRTFile(segments []map[string]interface{}, outputDir, baseFileName string) error {
-// // 	// Create SRT filename
-// // 	srtFileName := filepath.Join(outputDir, strings.TrimSuffix(baseFileName, filepath.Ext(baseFileName))+".srt")
+	// Use CombinedOutput with Wait to ensure command fully completes
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return nil, fmt.Errorf("failed to merge subtitles: %v. Output: %s", err, string(output))
+	}
 
-// // 	// Create or truncate the SRT file
-// // 	file, err := os.Create(srtFileName)
-// // 	if err != nil {
-// // 		return fmt.Errorf("failed to create SRT file: %v", err)
-// // 	}
-// // 	defer file.Close()
+	// Verify file was created
+	if _, err := os.Stat(outputVideoPath); os.IsNotExist(err) {
+		return nil, fmt.Errorf("output video file was not created")
+	}
 
-// // 	// Format time for SRT (HH:MM:SS,mmm)
-// // 	formatTime := func(seconds float64) string {
-// // 		duration := time.Duration(seconds * float64(time.Second))
-// // 		hours := int(duration.Hours())
-// // 		minutes := int(duration.Minutes()) % 60
-// // 		secs := int(duration.Seconds()) % 60
-// // 		milliseconds := int(duration.Milliseconds()) % 1000
+	// Get relative path from current working directory
+	relPath, err := filepath.Rel(".", outputVideoPath)
+	if err != nil {
+		relPath = outputVideoPath
+	}
 
-// // 		return fmt.Sprintf("%02d:%02d:%02d,%03d", hours, minutes, secs, milliseconds)
-// // 	}
+	return map[string]interface{}{
+		"file_path": relPath,
+	}, nil
+}
 
-// // 	// Write segments to file
-// // 	for i, segment := range segments {
-// // 		// Write segment number
-// // 		_, err := fmt.Fprintf(file, "%d\n", i+1)
-// // 		if err != nil {
-// // 			return fmt.Errorf("failed to write segment number: %v", err)
-// // 		}
+func generateSRTFile(segments []types.Segment, outputDir, baseFileName string) error {
+	// Create SRT filename
+	srtFileName := filepath.Join(outputDir, strings.TrimSuffix(filepath.Base(baseFileName), filepath.Ext(baseFileName))+".srt")
 
-// // 		// Write timestamp
-// // 		start := segment["start"].(float64)
-// // 		end := segment["end"].(float64)
-// // 		_, err = fmt.Fprintf(file, "%s --> %s\n", formatTime(start), formatTime(end))
-// // 		if err != nil {
-// // 			return fmt.Errorf("failed to write timestamp: %v", err)
-// // 		}
+	// Check if the file already exists
+	if _, err := os.Stat(srtFileName); err == nil {
+		// If it does, remove it
+		if err := os.Remove(srtFileName); err != nil {
+			return fmt.Errorf("failed to remove existing SRT file: %v", err)
+		}
+	}
 
-// // 		// Write text and blank line
-// // 		_, err = fmt.Fprintf(file, "%s\n\n", segment["text"].(string))
-// // 		if err != nil {
-// // 			return fmt.Errorf("failed to write text: %v", err)
-// // 		}
-// // 	}
+	// Create or truncate the SRT file
+	file, err := os.Create(srtFileName)
+	if err != nil {
+		return fmt.Errorf("failed to create SRT file: %v", err)
+	}
+	defer file.Close()
 
-// // 	return nil
-// // }
+	// Format time for SRT (HH:MM:SS,mmm)
+	formatTime := func(seconds float64) string {
+		duration := time.Duration(seconds * float64(time.Second))
+		hours := int(duration.Hours())
+		minutes := int(duration.Minutes()) % 60
+		secs := int(duration.Seconds()) % 60
+		milliseconds := int(duration.Milliseconds()) % 1000
+
+		return fmt.Sprintf("%02d:%02d:%02d,%03d", hours, minutes, secs, milliseconds)
+	}
+
+	// Write segments to file
+	for i, segment := range segments {
+		// Write segment number
+		_, err := fmt.Fprintf(file, "%d\n", i+1)
+		if err != nil {
+			return fmt.Errorf("failed to write segment number: %v", err)
+		}
+
+		// Write timestamp
+		start := segment.Start
+		end := segment.End
+		_, err = fmt.Fprintf(file, "%s --> %s\n", formatTime(start), formatTime(end))
+		if err != nil {
+			return fmt.Errorf("failed to write timestamp: %v", err)
+		}
+
+		// Write text and blank line
+		_, err = fmt.Fprintf(file, "%s\n\n", segment.Text)
+		if err != nil {
+			return fmt.Errorf("failed to write text: %v", err)
+		}
+	}
+
+	return nil
+}
