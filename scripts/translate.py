@@ -7,6 +7,28 @@ import json
 from tqdm import tqdm
 
 
+def get_language_id(tokenizer, lang_code):
+    try:
+        # Try different token formats
+        tokens_to_try = [
+            f"__{lang_code}__",
+            f"__{lang_code}",
+            lang_code
+        ]
+        
+        for token in tokens_to_try:
+            lang_id = tokenizer.convert_tokens_to_ids(token)
+            if lang_id != tokenizer.unk_token_id:
+                return lang_id
+        
+        raise ValueError(f"Could not find language ID for {lang_code}")
+    
+    except Exception as e:
+        print(f"Error finding language ID: {e}")
+        print("Available languages:", list(tokenizer.get_vocab().keys()))
+        raise
+
+
 def translate_text(
     batch_texts, model, tokenizer, device, target_lang="vi", max_length=512
 ):
@@ -29,13 +51,14 @@ def translate_text(
             max_length=max_length,
             num_beams=4,
             length_penalty=1.0,
-            forced_bos_token_id=tokenizer.lang_code_to_id[target_lang],
+            # forced_bos_token_id=tokenizer.lang_code_to_id[target_lang],
+            forced_bos_token_id=get_language_id(tokenizer, target_lang),
         )
 
     # Decode the batch
     return tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
-
+    
 def translate_json(
     input_file, output_file, model_name, batch_size=8, device=None, target_language="Vie_Latn"
 ):

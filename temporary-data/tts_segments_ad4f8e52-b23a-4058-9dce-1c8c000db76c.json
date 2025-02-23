@@ -1,0 +1,46 @@
+{
+  "segments": [
+    {
+      "id": 0,
+      "start": 0,
+      "end": 2.96,
+      "text": " Hey, Vsauce, Michael here.",
+      "language": "en"
+    },
+    {
+      "id": 1,
+      "start": 2.96,
+      "end": 9.64,
+      "text": " The dog that played Toto in the Wizard of Oz was credited as Toto.",
+      "language": "en"
+    },
+    {
+      "id": 2,
+      "start": 9.64,
+      "end": 16.84,
+      "text": " But in reality, the dog's name was Terry, and when Terry died in 1945, her owner and",
+      "language": "en"
+    },
+    {
+      "id": 3,
+      "start": 16.84,
+      "end": 22.240000000000002,
+      "text": " trainer Carl Spitz buried her on his ranch in Los Angeles.",
+      "language": "en"
+    },
+    {
+      "id": 4,
+      "start": 22.240000000000002,
+      "end": 29.48,
+      "text": " But in 1958, the Ventura Highway was constructed right through Terry's grave.",
+      "language": "en"
+    },
+    {
+      "id": 5,
+      "start": 29.48,
+      "end": 30.64,
+      "text": " Her remains were...",
+      "language": "en"
+    }
+  ]
+}

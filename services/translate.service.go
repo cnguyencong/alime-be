@@ -58,7 +58,6 @@ func saveTemporarySegmentFile(segments []types.Segment, langCode string) (string
 	}
 
 	return segmentsFilePath, nil
-
 }
 
 func processTranslateScript(filename string, langCode string) (map[string]interface{}, error) {
