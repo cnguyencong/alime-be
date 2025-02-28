@@ -57,6 +57,7 @@ func HandleGenerateTranscribe(c *gin.Context) {
 		"filename": filename,
 	}
 	err = db.SetItem(string(processId), data)
+
 	if err != nil {
 		c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
 		return
@@ -72,8 +73,10 @@ func HandleGenerateTranscribe(c *gin.Context) {
 	c.JSON(200, result)
 }
 
-func HandleDownloadVideoWithCaption(c *gin.Context) {
+func HandleExportVideo(c *gin.Context) {
 	req := types.ExportVideoRequest{}
+	log.Printf("HandleExportVideo req: %v", req)
+
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(400, gin.H{
 			"error": err.Error(),
@@ -97,7 +100,7 @@ func HandleDownloadVideoWithCaption(c *gin.Context) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	filename, ok := data["filename"].(string)
+	videoFilePath, ok := data["filename"].(string)
 	if !ok {
 		c.JSON(400, gin.H{
 			"error": "Invalid processId",
@@ -105,15 +108,84 @@ func HandleDownloadVideoWithCaption(c *gin.Context) {
 		return
 	}
 
-	result, err := services.MergeSubtitleToVideo(filename, segments)
-	if err != nil {
-		c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
-		return
+	if req.IsTrimVideo {
+		trimedVideoPath, error := services.TrimVideo(videoFilePath, req.TrimStart, req.TrimEnd)
+		if error != nil {
+			c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+			return
+		}
+
+		videoFilePath = trimedVideoPath
 	}
-	c.JSON(200, result)
+
+	if req.IsShowCaption {
+		newFile, error := services.MergeSubtitleToVideo(videoFilePath, segments)
+		if error != nil {
+			c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+			return
+		}
+		videoFilePath = newFile
+	}
+
+	if req.IsAppendTTS {
+		output, error := services.HandleAppendTTS(segments, videoFilePath, req.Language)
+
+		if error != nil {
+			c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+			return
+		}
+
+		videoFilePath = output
+		// Generate JSON file
+		// jsonFileName := strings.TrimSuffix(filepath.Base(videoFilePath), filepath.Ext(videoFilePath)) + ".json"
+		// jsonFilePath := filepath.Join("temporary-data", jsonFileName)
+
+		// jsonData, err := json.MarshalIndent(map[string]interface{}{
+		// 	"segments": segments,
+		// }, "", "  ")
+		// if err != nil {
+		// 	c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+		// 	return
+		// }
+
+		// err = os.WriteFile(jsonFilePath, jsonData, 0644)
+		// if err != nil {
+		// 	c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+		// 	return
+		// }
+
+		// ttss, error := services.BuildTTS(jsonFileName, jsonFilePath, req.Language)
+		// if error != nil {
+		// 	c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+		// 	return
+		// }
+
+		// println(ttss)
+
+		// bgm, error := services.GenerateBGMAudio(videoFilePath)
+		// if error != nil {
+		// 	c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+		// 	return
+		// }
+
+		// println(bgm)
+
+		// result, error := services.BuildTTSAudioWithBGM(ttss, jsonFilePath, bgm, videoFilePath)
+		// if error != nil {
+		// 	c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+		// 	return
+		// }
+
+		// println(result)
+
+	}
+
+	c.JSON(200, gin.H{
+		"file_path": videoFilePath,
+	})
 }
 
-func DownloadSubtitledVideo(c *gin.Context) {
+func DownloadVideo(c *gin.Context) {
 	// Get the file path from query parameter
 	filePath := c.Query("file")
 

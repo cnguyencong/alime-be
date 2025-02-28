@@ -2,6 +2,7 @@ package services
 
 import (
 	"alime-be/types"
+	"log"
 	"time"
 
 	"encoding/json"
@@ -15,7 +16,7 @@ import (
 )
 
 func ProcessTranscriptionScript(filename string, processID string) (map[string]interface{}, error) {
-	model := "base"
+	model := "medium"
 
 	outputDir := filepath.Join(".", "output")
 	if err := os.MkdirAll(outputDir, 0755); err != nil {
@@ -28,11 +29,15 @@ func ProcessTranscriptionScript(filename string, processID string) (map[string]i
 		scriptPath,
 		filename,
 		"--model", model,
+		"--process-id", processID,
 		"--output-path", outputDir,
 		"--output-name", filename,
 	}
 
 	cmd := exec.Command("python", args...)
+
+	log.Printf("Executing command: python %s", strings.Join(args, " "))
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, fmt.Errorf("whisper process failed: %v\nError output: %s", err, string(output))
@@ -61,14 +66,14 @@ func ProcessTranscriptionScript(filename string, processID string) (map[string]i
 	}, nil
 }
 
-func MergeSubtitleToVideo(filename string, segments []types.Segment) (map[string]interface{}, error) {
+func MergeSubtitleToVideo(filename string, segments []types.Segment) (string, error) {
 	outputDir := filepath.Dir(filename)
 	baseFileName := filepath.Base(filename)
 
 	// Generate SRT file
 	err := generateSRTFile(segments, outputDir, filename)
 	if err != nil {
-		return nil, fmt.Errorf("failed to generate SRT file: %v", err)
+		return "", fmt.Errorf("failed to generate SRT file: %v", err)
 	}
 
 	videoPath := filename
@@ -82,7 +87,7 @@ func MergeSubtitleToVideo(filename string, segments []types.Segment) (map[string
 
 	// Create output directory
 	if err := os.MkdirAll(filepath.Dir(outputVideoPath), 0755); err != nil {
-		return nil, fmt.Errorf("failed to create output subtitled directory: %v", err)
+		return "", fmt.Errorf("failed to create output subtitled directory: %v", err)
 	}
 
 	// Prepare FFmpeg command
@@ -95,12 +100,12 @@ func MergeSubtitleToVideo(filename string, segments []types.Segment) (map[string
 	// Use CombinedOutput with Wait to ensure command fully completes
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, fmt.Errorf("failed to merge subtitles: %v. Output: %s", err, string(output))
+		return "", fmt.Errorf("failed to merge subtitles: %v. Output: %s", err, string(output))
 	}
 
 	// Verify file was created
 	if _, err := os.Stat(outputVideoPath); os.IsNotExist(err) {
-		return nil, fmt.Errorf("output video file was not created")
+		return "", fmt.Errorf("output video file was not created")
 	}
 
 	// Get relative path from current working directory
@@ -109,9 +114,11 @@ func MergeSubtitleToVideo(filename string, segments []types.Segment) (map[string
 		relPath = outputVideoPath
 	}
 
-	return map[string]interface{}{
-		"file_path": relPath,
-	}, nil
+	// return map[string]interface{}{
+	// 	"file_path": relPath,
+	// }, nil
+
+	return relPath, nil
 }
 
 func generateSRTFile(segments []types.Segment, outputDir, baseFileName string) error {

@@ -29,6 +29,12 @@ type WhisperResponse struct {
 }
 
 type ExportVideoRequest struct {
-	ProcessId string                   `json:"processId"`
-	Segments  []map[string]interface{} `json:"segments"`
+	ProcessId     string                   `json:"processId"`
+	Segments      []map[string]interface{} `json:"segments"`
+	Language      string                   `json:"language"`
+	IsShowCaption bool                     `json:"isShowCaption"`
+	IsAppendTTS   bool                     `json:"isAppendTTS"`
+	IsTrimVideo   bool                     `json:"isTrimVideo"`
+	TrimStart     float64                  `json:"trimStart"`
+	TrimEnd       float64                  `json:"trimEnd"`
 }

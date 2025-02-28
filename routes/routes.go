@@ -14,11 +14,14 @@ func SetupRoutes(r *gin.Engine) {
 	{
 		api.POST("/upload", controllers.HandleGenerateTranscribe)
 		api.POST("/translate", controllers.HandleTranslate)
-		api.POST("/download-video", controllers.HandleDownloadVideoWithCaption)
+		api.POST("/download-video", controllers.HandleExportVideo)
 		api.POST("/process-tts", controllers.HandleTTS)
+		api.POST("/process-tts-text", controllers.HandleTTSText)
 
 		// New route for downloading subtitled videos
-		api.GET("/download-subtitled-video", controllers.DownloadSubtitledVideo)
+		api.GET("/download-video", controllers.DownloadVideo)
+
+		api.GET("/stream-audio/:filename", controllers.HandleStreamTTS)
 	}
 }
 

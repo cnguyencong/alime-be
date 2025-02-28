@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func TranslateSegments(segments []types.Segment, lang string) (map[string]interface{}, error) {
@@ -150,6 +151,26 @@ func loadLanguageCode(lang string) string {
 	}
 
 	return ""
+}
+
+func TrimVideo(videoPath string, trimStart float64, trimEnd float64) (string, error) {
+	// Generate a unique output filename
+	outputPath := fmt.Sprintf("%s_trimmed_%d.mp4", strings.TrimSuffix(videoPath, filepath.Ext(videoPath)), time.Now().UnixNano())
+
+	// Construct FFmpeg command to trim video
+	cmd := exec.Command("ffmpeg",
+		"-i", videoPath,
+		"-ss", fmt.Sprintf("%.2f", trimStart),
+		"-to", fmt.Sprintf("%.2f", trimEnd),
+		"-c", "copy",
+		outputPath)
+
+	// Run the command and capture any potential errors
+	if err := cmd.Run(); err != nil {
+		return "", fmt.Errorf("failed to trim video: %v", err)
+	}
+
+	return outputPath, nil
 }
 
 // func execScriptWithDebug(args ...string) {
