@@ -1,0 +1,48 @@
+Time: 2025-03-06T11:37:32+07:00
+Failed to execute command: python scripts\translate.py json-segment-data\7ae3b29a-9bba-41b9-b39c-ef6c0d0af779.json --target-language vie_Latn --output-dir output\translated
+Target language: vie_Latn
+
+Using device: cuda
+GPU: NVIDIA RTX A4000 Laptop GPU
+
+Loading model: facebook/nllb-200-distilled-600M
+
+Reading JSON file...
+Traceback (most recent call last):
+  File "D:\project\alime-be\scripts\translate.py", line 174, in <module>
+    main()
+  File "D:\project\alime-be\scripts\translate.py", line 163, in main
+    translate_json(
+  File "D:\project\alime-be\scripts\translate.py", line 83, in translate_json
+    blocks = json.load(f)
+  File "C:\Program Files\Python310\lib\json\__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "C:\Program Files\Python310\lib\json\__init__.py", line 335, in loads
+    raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+json.decoder.JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+
+--------------------------------------------
+Time: 2025-03-06T11:38:13+07:00
+Failed to execute command: python scripts\translate.py json-segment-data\eb44d12b-b4e8-4e9e-864a-7bb444640b62.json --target-language vie_Latn --output-dir output\translated
+Target language: vie_Latn
+
+Using device: cuda
+GPU: NVIDIA RTX A4000 Laptop GPU
+
+Loading model: facebook/nllb-200-distilled-600M
+
+Reading JSON file...
+Traceback (most recent call last):
+  File "D:\project\alime-be\scripts\translate.py", line 174, in <module>
+    main()
+  File "D:\project\alime-be\scripts\translate.py", line 163, in main
+    translate_json(
+  File "D:\project\alime-be\scripts\translate.py", line 83, in translate_json
+    blocks = json.load(f)
+  File "C:\Program Files\Python310\lib\json\__init__.py", line 293, in load
+    return loads(fp.read(),
+  File "C:\Program Files\Python310\lib\json\__init__.py", line 335, in loads
+    raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+json.decoder.JSONDecodeError: Unexpected UTF-8 BOM (decode using utf-8-sig): line 1 column 1 (char 0)
+
+--------------------------------------------

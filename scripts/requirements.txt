@@ -1,0 +1,7 @@
+transformers
+torch
+tqdm
+faster_whisper
+soundfile
+demucs
+edge_tts
