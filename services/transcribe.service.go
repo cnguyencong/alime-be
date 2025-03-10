@@ -1,178 +1,71 @@
 package services
 
 import (
-	"alime-be/types"
-	"log"
-	"time"
+	"alime-be/utils"
 
-	"encoding/json"
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
-
-	"github.com/google/uuid"
 )
 
-func ProcessTranscriptionScript(filename string, processID string) (map[string]interface{}, error) {
-	model := "medium"
-
-	outputDir := filepath.Join(".", "output")
+func ProcessTranscriptionScript(filePath string, fileName string) (string, error) {
+	outputDir := filepath.Join(".", "output/transcripts")
 	if err := os.MkdirAll(outputDir, 0755); err != nil {
-		return nil, fmt.Errorf("failed to create output directory: %v", err)
+		return "", fmt.Errorf("failed to create output directory: %v", err)
 	}
 
-	scriptPath := filepath.Join(".", "scripts/faster-whisper.py")
+	scriptPath := filepath.Join(".", "scripts/transcribe.py")
+	baseFileName := filepath.Base(filePath)
+	ext := filepath.Ext(baseFileName)
 
 	args := []string{
 		scriptPath,
-		filename,
-		"--model", model,
-		"--process-id", processID,
+		filePath,
 		"--output-path", outputDir,
-		"--output-name", filename,
+		"--output-name", baseFileName,
 	}
-
-	cmd := exec.Command("python", args...)
-
-	log.Printf("Executing command: python %s", strings.Join(args, " "))
-
-	output, err := cmd.CombinedOutput()
+	output, err := utils.ExecExternalScript(args, "python")
 	if err != nil {
-		return nil, fmt.Errorf("whisper process failed: %v\nError output: %s", err, string(output))
+		return "", fmt.Errorf("whisper process failed: %v\nError output: %s", err, string(output))
 	}
 
-	baseFileName := filepath.Base(filename)
-	ext := filepath.Ext(baseFileName)
 	outputFile := filepath.Join(outputDir, strings.TrimSuffix(baseFileName, ext)+".json")
+	return string(outputFile), nil
 
-	// Read the output file
-	outputContent, err := os.ReadFile(outputFile)
-	if err != nil {
-		return nil, fmt.Errorf("failed to read output file: %v", err)
-	}
+	// //Read the output file with UTF-8 encoding
+	// outputContent, err := os.ReadFile(outputFile)
+	// if err != nil {
+	// 	return "", fmt.Errorf("failed to read output file: %v", err)
+	// }
 
-	// Parse the JSON response
-	var whisperResp types.WhisperResponse
-	if err := json.Unmarshal(outputContent, &whisperResp); err != nil {
-		return nil, fmt.Errorf("failed to parse whisper output: %v", err)
-	}
+	// // Ensure UTF-8 decoding
+	// outputContent = []byte(string(outputContent))
 
-	return map[string]interface{}{
-		"success":   true,
-		"processID": processID,
-		"segments":  whisperResp.Segments,
-	}, nil
-}
+	// // Parse the JSON response with UTF-8 support
+	// var whisperResp types.WhisperResponse
+	// decoder := json.NewDecoder(bytes.NewReader(outputContent))
+	// decoder.UseNumber() // Preserve number precision
+	// decoder.Decode(&whisperResp)
 
-func MergeSubtitleToVideo(filename string, segments []types.Segment) (string, error) {
-	outputDir := filepath.Dir(filename)
-	baseFileName := filepath.Base(filename)
-
-	// Generate SRT file
-	err := generateSRTFile(segments, outputDir, filename)
-	if err != nil {
-		return "", fmt.Errorf("failed to generate SRT file: %v", err)
-	}
-
-	videoPath := filename
-	srtPath := filepath.Join(outputDir, strings.TrimSuffix(baseFileName, filepath.Ext(baseFileName))+".srt")
-	outputVideoPath := filepath.Join(".", "output_subtitled", "subtitled_"+string(uuid.New().String())+"_"+baseFileName)
-
-	// Ensure paths are absolute and use forward slashes
-	videoPath = filepath.ToSlash(filepath.Clean(videoPath))
-	srtPath = filepath.ToSlash(filepath.Clean(srtPath))
-	outputVideoPath = filepath.ToSlash(filepath.Clean(outputVideoPath))
-
-	// Create output directory
-	if err := os.MkdirAll(filepath.Dir(outputVideoPath), 0755); err != nil {
-		return "", fmt.Errorf("failed to create output subtitled directory: %v", err)
-	}
-
-	// Prepare FFmpeg command
-	cmd := exec.Command("ffmpeg",
-		"-i", videoPath,
-		"-vf", "subtitles="+srtPath,
-		"-c:a", "copy",
-		outputVideoPath)
-
-	// Use CombinedOutput with Wait to ensure command fully completes
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		return "", fmt.Errorf("failed to merge subtitles: %v. Output: %s", err, string(output))
-	}
-
-	// Verify file was created
-	if _, err := os.Stat(outputVideoPath); os.IsNotExist(err) {
-		return "", fmt.Errorf("output video file was not created")
-	}
-
-	// Get relative path from current working directory
-	relPath, err := filepath.Rel(".", outputVideoPath)
-	if err != nil {
-		relPath = outputVideoPath
-	}
+	// // Optional: Explicit UTF-8 validation
+	// for i, segment := range whisperResp.Segments {
+	// 	if !utf8.ValidString(segment.Text) {
+	// 		// Sanitize or handle invalid UTF-8 characters
+	// 		whisperResp.Segments[i].Text = sanitizeUTF8(segment.Text)
+	// 	}
+	// }
 
 	// return map[string]interface{}{
-	// 	"file_path": relPath,
+	// 	"segments": whisperResp.Segments,
 	// }, nil
-
-	return relPath, nil
 }
 
-func generateSRTFile(segments []types.Segment, outputDir, baseFileName string) error {
-	// Create SRT filename
-	srtFileName := filepath.Join(outputDir, strings.TrimSuffix(filepath.Base(baseFileName), filepath.Ext(baseFileName))+".srt")
-
-	// Check if the file already exists
-	if _, err := os.Stat(srtFileName); err == nil {
-		// If it does, remove it
-		if err := os.Remove(srtFileName); err != nil {
-			return fmt.Errorf("failed to remove existing SRT file: %v", err)
-		}
-	}
-
-	// Create or truncate the SRT file
-	file, err := os.Create(srtFileName)
-	if err != nil {
-		return fmt.Errorf("failed to create SRT file: %v", err)
-	}
-	defer file.Close()
-
-	// Format time for SRT (HH:MM:SS,mmm)
-	formatTime := func(seconds float64) string {
-		duration := time.Duration(seconds * float64(time.Second))
-		hours := int(duration.Hours())
-		minutes := int(duration.Minutes()) % 60
-		secs := int(duration.Seconds()) % 60
-		milliseconds := int(duration.Milliseconds()) % 1000
-
-		return fmt.Sprintf("%02d:%02d:%02d,%03d", hours, minutes, secs, milliseconds)
-	}
-
-	// Write segments to file
-	for i, segment := range segments {
-		// Write segment number
-		_, err := fmt.Fprintf(file, "%d\n", i+1)
-		if err != nil {
-			return fmt.Errorf("failed to write segment number: %v", err)
-		}
-
-		// Write timestamp
-		start := segment.Start
-		end := segment.End
-		_, err = fmt.Fprintf(file, "%s --> %s\n", formatTime(start), formatTime(end))
-		if err != nil {
-			return fmt.Errorf("failed to write timestamp: %v", err)
-		}
-
-		// Write text and blank line
-		_, err = fmt.Fprintf(file, "%s\n\n", segment.Text)
-		if err != nil {
-			return fmt.Errorf("failed to write text: %v", err)
-		}
-	}
-
-	return nil
-}
+// func sanitizeUTF8(s string) string {
+// 	return strings.Map(func(r rune) rune {
+// 		if r == utf8.RuneError {
+// 			return -1
+// 		}
+// 		return r
+// 	}, s)
+// }

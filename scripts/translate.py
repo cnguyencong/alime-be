@@ -1,7 +1,6 @@
 import argparse
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer
 import torch
-import re
 import os
 import json
 from tqdm import tqdm
@@ -10,19 +9,15 @@ from tqdm import tqdm
 def get_language_id(tokenizer, lang_code):
     try:
         # Try different token formats
-        tokens_to_try = [
-            f"__{lang_code}__",
-            f"__{lang_code}",
-            lang_code
-        ]
-        
+        tokens_to_try = [f"__{lang_code}__", f"__{lang_code}", lang_code]
+
         for token in tokens_to_try:
             lang_id = tokenizer.convert_tokens_to_ids(token)
             if lang_id != tokenizer.unk_token_id:
                 return lang_id
-        
+
         raise ValueError(f"Could not find language ID for {lang_code}")
-    
+
     except Exception as e:
         print(f"Error finding language ID: {e}")
         print("Available languages:", list(tokenizer.get_vocab().keys()))
@@ -58,11 +53,19 @@ def translate_text(
     # Decode the batch
     return tokenizer.batch_decode(outputs, skip_special_tokens=True)
 
-    
+
 def translate_json(
-    input_file, output_file, model_name, batch_size=8, device=None, target_language="Vie_Latn"
+    input_file, output_file, model_name, batch_size=8, device=None, target_language="vi"
 ):
     """Optimized translation using batched processing"""
+
+    translating_code_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "translating_code.json"
+    )
+
+    with open(translating_code_path, "r", encoding="utf-8-sig") as f:
+        translating_code = json.load(f)
+    langcode = translating_code.get(target_language, target_language)
 
     if device is None:
         device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -74,16 +77,17 @@ def translate_json(
     else:
         model = AutoModelForSeq2SeqLM.from_pretrained(model_name).to(device)
 
-
     # Load model and tokenizer
     print(f"\nLoading model: {model_name}")
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     # Read JSON input
     print("\nReading JSON file...")
-    with open(input_file, "r", encoding="utf-8") as f:
+    with open(input_file, "r", encoding="utf-8-sig") as f:
         data = json.load(f)
 
     blocks = data.get("segments", [])
+    print(f"Blocks: {blocks}")
+
     translated_blocks = []
 
     for i in tqdm(range(0, len(blocks), batch_size)):
@@ -92,7 +96,7 @@ def translate_json(
 
         # 🔥 Batch translation 🔥
         translations = translate_text(
-            batch_texts, model, tokenizer, device, target_lang=target_language
+            batch_texts, model, tokenizer, device, target_lang=langcode
         )
 
         # Store results
@@ -154,10 +158,10 @@ def main():
         os.makedirs(args.output_dir, exist_ok=True)
         output_file = os.path.join(
             args.output_dir,
-            f"{os.path.splitext(os.path.basename(args.input_file))[0]}_translated.json",
+            f"{os.path.splitext(os.path.basename(args.input_file))[0]}_{args.target_language}.json",
         )
     else:
-        output_file = os.path.splitext(args.input_file)[0] + "_translated.json"
+        output_file = f"{os.path.splitext(os.path.basename(args.input_file))[0]}_{args.target_language}.json"
 
     print(f"Target language: {args.target_language}")
 

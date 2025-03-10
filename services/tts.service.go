@@ -2,7 +2,7 @@ package services
 
 import (
 	"alime-be/types"
-	"encoding/json"
+	"alime-be/utils"
 	"fmt"
 	"log"
 	"os"
@@ -12,21 +12,18 @@ import (
 )
 
 func BuildTTSAudioWithBGM(audioFolderPath string, transcriptsPath string, bgmPath string) (string, error) {
-	scriptPath := filepath.Join(".", "scripts/build-audio-with-bgm.py")
+	scriptPath := filepath.Join(".", "scripts/text-to-speech-scripts/build-audio-with-bgm.py")
 
 	args := []string{
 		scriptPath,
 		filepath.Join(".", audioFolderPath),
 		filepath.Join(".", transcriptsPath),
 		filepath.Join(".", bgmPath),
-		// filepath.Join(".", videoPath),
 	}
 
-	cmd := exec.Command("python", args...)
-	output, err := cmd.CombinedOutput()
-	println(string(output))
+	output, err := utils.ExecExternalScript(args, "python")
 	if err != nil {
-		return "", fmt.Errorf("whisper process failed: %v\nError output: %s", err, string(output))
+		return "", fmt.Errorf("build tts with bgm failed: %v\nError output: %s", err, string(output))
 	}
 
 	bgmFolder := filepath.Dir(bgmPath)
@@ -41,7 +38,7 @@ func HandleAppendTTS(segments []types.Segment, videoPath string, language string
 
 	videoName := strings.TrimSuffix(filepath.Base(videoPath), filepath.Ext(videoPath))
 
-	jsonPath, error := CreateJSONFile(segments, videoName+".json")
+	jsonPath, error := utils.CreateJSONFile(map[string]interface{}{"segments": segments}, videoName+".json", "output/json")
 	if error != nil {
 		log.Fatal(error)
 	}
@@ -51,20 +48,20 @@ func HandleAppendTTS(segments []types.Segment, videoPath string, language string
 		return "", fmt.Errorf("failed to generate bgm: %v", error)
 	}
 
-	log.Println(bgm, "------------------------------------------")
-
 	tts_path, error := BuildTTS(jsonPath, language)
 	if error != nil {
 		return "", fmt.Errorf("failed to build tts: %v", error)
 	}
 
-	log.Println(tts_path, "------------------------------------------")
-
 	mixedAudioPath, error := BuildTTSAudioWithBGM(tts_path, jsonPath, bgm)
-
-	log.Println(mixedAudioPath, "------------------------------------------")
+	if error != nil {
+		return "", fmt.Errorf("failed to build tts with bgm: %v", error)
+	}
 
 	fullOutputPath, error := ReplaceVideoAudio(videoPath, mixedAudioPath, filepath.Dir(videoPath))
+	if error != nil {
+		return "", fmt.Errorf("failed to replace video audio: %v", error)
+	}
 
 	return fullOutputPath, nil
 }
@@ -111,71 +108,47 @@ func ReplaceVideoAudio(videoPath string, audioPath string, outputPath string) (s
 	return fullOutputPath, nil
 }
 
-func CreateJSONFile(data interface{}, filename string) (string, error) {
-	// Ensure the output directory exists
-	outputDir := filepath.Join(".", "tts-json-output")
-	if err := os.MkdirAll(outputDir, 0755); err != nil {
-		return "", fmt.Errorf("failed to create output directory: %v", err)
-	}
-
-	// Generate full path
-	path := filepath.Join(outputDir, filename)
-
-	// Marshal JSON with indentation
-	jsonData, err := json.MarshalIndent(data, "", "  ")
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal JSON: %v", err)
-	}
-
-	// Write file with proper permissions
-	if err := os.WriteFile(path, jsonData, 0644); err != nil {
-		return "", fmt.Errorf("failed to write JSON file %s: %v", filename, err)
-	}
-
-	return path, nil
-}
-
 func GenerateBGMAudio(mediaPath string) (string, error) {
-	scriptPath := filepath.Join(".", "scripts/split-BGM.py")
+	scriptPath := filepath.Join(".", "scripts/text-to-speech-scripts/split-BGM.py")
 
 	args := []string{
 		scriptPath,
 		mediaPath,
 	}
-
-	cmd := exec.Command("python", args...)
-
-	output, err := cmd.CombinedOutput()
+	output, err := utils.ExecExternalScript(args, "python")
 	if err != nil {
-		return "", fmt.Errorf("whisper process failed: %v\nError output: %s", err, string(output))
+		return "", fmt.Errorf("BGM process failed: %v\nError output: %s", err, string(output))
 	}
 
 	audioName := strings.TrimSuffix(filepath.Base(mediaPath), filepath.Ext(mediaPath))
 
 	result := filepath.Join(".", "separated", "htdemucs", audioName+"-audio", "no_vocals.wav")
 
-	fmt.Println("--------------------------------")
+	log.Printf(result)
+
 	return result, nil
 }
 
 func BuildTTS(transcriptsPath string, language string) (string, error) {
-	scriptPath := filepath.Join(".", "scripts/tts-file.py")
+	scriptPath := filepath.Join(".", "scripts/text-to-speech-scripts/generate-tts-from-segments.py")
+	name := strings.TrimSuffix(filepath.Base(transcriptsPath), filepath.Ext(transcriptsPath))
+	name = strings.TrimSuffix(name, "_"+language)
+	outputDir := filepath.Join(".", fmt.Sprintf("output/tts/%s/%s", name, language))
 
 	args := []string{
 		scriptPath,
 		transcriptsPath,
 		"--language", language,
+		"--output", outputDir,
 	}
 
-	cmd := exec.Command("python", args...)
-	output, err := cmd.CombinedOutput()
+	output, err := utils.ExecExternalScript(args, "python")
+
 	if err != nil {
 		return "", fmt.Errorf("TTS process failed: %v\nError output: %s", err, string(output))
 	}
 
-	name := filepath.Base(transcriptsPath)
-	result := filepath.Join(".", "temporary-output", strings.TrimSuffix(name, filepath.Ext(name)))
-	fmt.Println("--------------------------------")
+	result := filepath.Join(".", outputDir)
 
 	return result, nil
 }

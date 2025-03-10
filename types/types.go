@@ -1,23 +1,32 @@
 package types
 
 type TranslateRequest struct {
-	Segments       []map[string]interface{} `json:"segments"`
-	TargetLanguage string                   `json:"targetLanguage"`
+	// Segments       []map[string]interface{} `json:"segments"`
+	TargetLanguage string `json:"targetLanguage"`
+	ProcessId      string `json:"processId"`
 }
 
 type TTSRequest struct {
-	TTSSegments []map[string]interface{} `json:"segments"`
-	ProcessID   string                   `json:"processId"`
+	Text     string `json:"text"`
+	Language string `json:"language"`
+}
+
+type MediaStorageData struct {
+	FileName       string `json:"filename"`
+	FileExt        string `json:"fileExt"`
+	FileFullName   string `json:"fileFullName"`
+	FileUniqueName string `json:"fileUniqueName"`
+	FilePath       string `json:"filePath"`
 }
 
 type Segment struct {
-	ID    int     `json:"id"`
+	Id    int     `json:"id"`
 	Start float64 `json:"start"`
 	End   float64 `json:"end"`
 	Text  string  `json:"text"`
 }
 type TTSSegment struct {
-	ID       int     `json:"id"`
+	Id       int     `json:"id"`
 	Start    float64 `json:"start"`
 	End      float64 `json:"end"`
 	Text     string  `json:"text"`
@@ -26,6 +35,10 @@ type TTSSegment struct {
 
 type WhisperResponse struct {
 	Segments []Segment `json:"segments"`
+}
+
+type GetMediaRequest struct {
+	FilePath string `json:"filepath"`
 }
 
 type ExportVideoRequest struct {
