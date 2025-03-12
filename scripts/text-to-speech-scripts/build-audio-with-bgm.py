@@ -1,7 +1,6 @@
 import argparse
 from ast import arg
 import os
-import soundfile as sf
 import json
 import subprocess
 
@@ -32,16 +31,10 @@ def buildTTSAudioWithBGM(tts_audio_folder_path, script_path, bgm_path):
 
         # Find the corresponding TTS file
         tts_file = next(
-            (
-                i
-                for i in tts_audio_file_path_list
-                if i.endswith(f"_{id}.wav")
-            ),
+            (i for i in tts_audio_file_path_list if i.endswith(f"_{id}.wav")),
             None,
         )
         tts_audio.append({"path": tts_file, "start": block.get("start", 0)})
-
-
 
     # Append TTS audio to BGM
     output_bgm_path = os.path.join(os.path.dirname(bgm_path), "final_mixed_audio.wav")
@@ -97,6 +90,7 @@ def appendAudioToBGM(bgm_path, audio_list, output_path):
 
     print("FFmpeg Command:", command)
     subprocess.run(command, shell=True)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Build audio with BGM")
