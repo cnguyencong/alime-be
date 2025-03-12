@@ -17,7 +17,6 @@ func SetupRoutes(r *gin.Engine) {
 		api.POST("/export-video", controllers.HandleExportVideo)
 		api.POST("/process-tts-text", controllers.HandleTTSText)
 
-		// New route for downloading subtitled videos
 		api.POST("/download-video", controllers.DownloadVideo)
 		api.POST("/stream-audio", controllers.HandleStreamAudio)
 	}

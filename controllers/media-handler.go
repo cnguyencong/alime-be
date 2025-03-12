@@ -6,6 +6,7 @@ import (
 	"alime-be/types"
 	"alime-be/utils"
 	"log"
+	"path"
 
 	"fmt"
 	"net/http"
@@ -45,6 +46,15 @@ func HandleExportVideo(c *gin.Context) {
 	}
 	videoFilePath := mediaData.FilePath
 
+	if req.IsUsingFrameTransition {
+		transitionedVideoPath, err := ProcessFrameTransition(videoFilePath, mediaData, req.TransitionStart, req.TransitionEnd)
+		if err != nil {
+			c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process frame transition: %v", err)})
+			return
+		}
+		videoFilePath = transitionedVideoPath
+	}
+
 	if req.IsShowCaption {
 		srtOutputPath := filepath.Join(".", "output/srt")
 		srtOutput, err := utils.GenerateSRTFile(segments, srtOutputPath, mediaData)
@@ -59,6 +69,7 @@ func HandleExportVideo(c *gin.Context) {
 			return
 		}
 		videoFilePath = newFile
+
 	}
 
 	if req.IsAppendTTS {
@@ -81,6 +92,14 @@ func HandleExportVideo(c *gin.Context) {
 
 		videoFilePath = trimedVideoPath
 	}
+
+	newFileName := filepath.Join(filepath.Dir(videoFilePath), fmt.Sprintf("%s_final%s", mediaData.FileName, mediaData.FileExt))
+	err = os.Rename(videoFilePath, newFileName)
+	if err != nil {
+		c.JSON(500, gin.H{"error": fmt.Sprintf("Failed to process file: %v", err)})
+		return
+	}
+	videoFilePath = newFileName
 
 	c.JSON(200, gin.H{
 		"file_path": videoFilePath,
@@ -138,7 +157,9 @@ func TrimVideo(videoPath string, trimStart float64, trimEnd float64) (string, er
 		"-i", videoPath,
 		"-ss", fmt.Sprintf("%.2f", trimStart),
 		"-to", fmt.Sprintf("%.2f", trimEnd),
-		"-c", "copy", outputPath,
+		"-c:v", "libx264", // Specify video codec for the output
+		"-c:a", "copy", // Copy audio stream without re-encoding
+		outputPath,
 	}
 
 	output, err := utils.ExecExternalScript(command, "ffmpeg")
@@ -146,6 +167,24 @@ func TrimVideo(videoPath string, trimStart float64, trimEnd float64) (string, er
 	// Run the command and capture any potential errors
 	if err != nil {
 		return "", fmt.Errorf("failed to trim video: %v. Output: %s", err, string(output))
+	}
+
+	return outputPath, nil
+}
+
+func ProcessFrameTransition(videoPath string, mediaData types.MediaStorageData, transitionStart float64, transitionEnd float64) (string, error) {
+	outputPath := filepath.Join(".", "output/exported", fmt.Sprintf("%s_transition%s", mediaData.FileName, mediaData.FileExt))
+	scriptPath := path.Join(".", "scripts/text-to-speech-scripts/insert-transistion.py")
+
+	command := []string{
+		scriptPath, "--input", videoPath, "--output", outputPath, "--start", fmt.Sprintf("%.2f", transitionStart), "--end", fmt.Sprintf("%.2f", transitionEnd),
+	}
+
+	output, err := utils.ExecExternalScript(command, "python")
+
+	// Run the command and capture any potential errors
+	if err != nil {
+		return "", fmt.Errorf("failed to process frame transition: %v. Output: %s", err, string(output))
 	}
 
 	return outputPath, nil

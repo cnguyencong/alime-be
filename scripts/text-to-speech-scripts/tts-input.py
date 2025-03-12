@@ -21,7 +21,6 @@ def get_language_code(language):
     return language_codes.get(language, "en-US-GuyNeural")
 
 
-
 async def processTTS(input_text, name, language="en"):
     if not os.path.exists("output/tts/temporary-output"):
         os.makedirs("output/tts/temporary-output")
@@ -34,6 +33,7 @@ async def processTTS(input_text, name, language="en"):
     with sf.SoundFile(output_path) as audio_file:
         audio_length = len(audio_file) / audio_file.samplerate
     return audio_length  # Return the length of the audio
+
 
 async def main():
     parser = argparse.ArgumentParser(
@@ -52,6 +52,7 @@ async def main():
     args = parser.parse_args()
     audio_length = await processTTS(args.input, args.name, args.language)
     print(audio_length)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
